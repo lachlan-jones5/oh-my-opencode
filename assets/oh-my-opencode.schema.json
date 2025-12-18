@@ -1208,6 +1208,23 @@
           "type": "boolean"
         }
       }
+    },
+    "experimental": {
+      "type": "object",
+      "properties": {
+        "aggressive_truncation": {
+          "type": "boolean"
+        },
+        "empty_message_recovery": {
+          "type": "boolean"
+        },
+        "auto_resume": {
+          "type": "boolean"
+        }
+      }
+    },
+    "auto_update": {
+      "type": "boolean"
     }
   }
 }

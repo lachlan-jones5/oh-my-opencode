@@ -220,6 +220,7 @@ const OhMyOpenCodePlugin: Plugin = async (ctx) => {
   const autoUpdateChecker = isHookEnabled("auto-update-checker")
     ? createAutoUpdateCheckerHook(ctx, {
         showStartupToast: isHookEnabled("startup-toast"),
+        autoUpdate: pluginConfig.auto_update ?? true,
       })
     : null;
   const keywordDetector = isHookEnabled("keyword-detector")

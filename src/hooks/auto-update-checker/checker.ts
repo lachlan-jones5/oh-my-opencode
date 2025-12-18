@@ -97,6 +97,7 @@ export interface PluginEntryInfo {
   entry: string
   isPinned: boolean
   pinnedVersion: string | null
+  configPath: string
 }
 
 export function findPluginEntry(directory: string): PluginEntryInfo | null {
@@ -109,12 +110,12 @@ export function findPluginEntry(directory: string): PluginEntryInfo | null {
 
       for (const entry of plugins) {
         if (entry === PACKAGE_NAME) {
-          return { entry, isPinned: false, pinnedVersion: null }
+          return { entry, isPinned: false, pinnedVersion: null, configPath }
         }
         if (entry.startsWith(`${PACKAGE_NAME}@`)) {
           const pinnedVersion = entry.slice(PACKAGE_NAME.length + 1)
           const isPinned = pinnedVersion !== "latest"
-          return { entry, isPinned, pinnedVersion: isPinned ? pinnedVersion : null }
+          return { entry, isPinned, pinnedVersion: isPinned ? pinnedVersion : null, configPath }
         }
       }
     } catch {
@@ -168,6 +169,35 @@ export async function getLatestVersion(): Promise<string | null> {
   } finally {
     clearTimeout(timeoutId)
   }
+}
+
+export function updatePinnedVersion(configPath: string, oldEntry: string, newVersion: string): boolean {
+  try {
+    const content = fs.readFileSync(configPath, "utf-8")
+    const newEntry = `${PACKAGE_NAME}@${newVersion}`
+    
+    // Use string replacement to preserve JSONC comments and formatting
+    const updatedContent = content.replace(
+      new RegExp(`["']${escapeRegExp(oldEntry)}["']`, "g"),
+      `"${newEntry}"`
+    )
+    
+    if (updatedContent === content) {
+      log(`[auto-update-checker] No changes made to ${configPath}`)
+      return false
+    }
+    
+    fs.writeFileSync(configPath, updatedContent, "utf-8")
+    log(`[auto-update-checker] Updated ${configPath}: ${oldEntry} → ${newEntry}`)
+    return true
+  } catch (err) {
+    log(`[auto-update-checker] Failed to update config file:`, err)
+    return false
+  }
+}
+
+function escapeRegExp(string: string): string {
+  return string.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")
 }
 
 export async function checkForUpdate(directory: string): Promise<UpdateCheckResult> {
