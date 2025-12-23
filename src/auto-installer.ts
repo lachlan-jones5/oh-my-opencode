@@ -1,6 +1,7 @@
 #!/usr/bin/env bun
 
 import { $ } from "bun"
+import { createReadStream } from "fs"
 import { homedir } from "os"
 import { join } from "path"
 import { createInterface } from "readline"
@@ -109,10 +110,24 @@ interface OmoConfig {
   agents?: Record<string, { model: string }>
 }
 
-const rl = createInterface({
-  input: process.stdin,
-  output: process.stdout,
-})
+function createReadlineInterface() {
+  // When piped (curl ... | bun run -), stdin is the script content, not TTY
+  // Use /dev/tty for interactive input in that case
+  if (process.stdin.isTTY) {
+    return createInterface({ input: process.stdin, output: process.stdout })
+  }
+
+  try {
+    const ttyInput = createReadStream("/dev/tty")
+    return createInterface({ input: ttyInput, output: process.stdout })
+  } catch {
+    console.error("\x1b[31m[ERROR]\x1b[0m This installer requires an interactive terminal.")
+    console.error("Run directly: bun run <(curl -fsSL https://raw.githubusercontent.com/code-yeongyu/oh-my-opencode/master/src/auto-installer.ts)")
+    process.exit(1)
+  }
+}
+
+const rl = createReadlineInterface()
 
 function ask(question: string): Promise<string> {
   return new Promise((resolve) => {
