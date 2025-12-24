@@ -57,6 +57,7 @@
     "@mozilla/readability": "^0.6.0",
     "@openauthjs/openauth": "^0.4.3",
     "@opencode-ai/plugin": "^1.0.162",
+    "cheerio": "^1.1.2",
     "commander": "^14.0.2",
     "hono": "^4.10.4",
     "jsdom": "^27.3.0",

@@ -1,1 +1,1 @@
-export type CompactionStrategy = "raw" | "readability" | "grep"
+export type CompactionStrategy = "raw" | "readability" | "grep" | "snapshot"

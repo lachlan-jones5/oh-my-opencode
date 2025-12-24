@@ -1,6 +1,6 @@
 import { tool } from "@opencode-ai/plugin/tool"
 import { DEFAULT_STRATEGY, MAX_OUTPUT_SIZE, MAX_RAW_SIZE, TIMEOUT_MS } from "./constants"
-import { applyReadability, applyRaw, applyGrep, type GrepOptions } from "./strategies"
+import { applyReadability, applyRaw, applyGrep, applySnapshot, type GrepOptions } from "./strategies"
 import type { CompactionStrategy } from "./types"
 
 function formatBytes(bytes: number): string {
@@ -48,6 +48,8 @@ function applyStrategy(
         return "Error: 'pattern' is required for grep strategy"
       }
       return applyGrep(content, grepOptions.pattern, grepOptions)
+    case "snapshot":
+      return applySnapshot(content)
     default:
       return applyReadability(content, url)
   }
@@ -58,12 +60,13 @@ export const webfetch = tool({
     "Fetch and process web content with compaction strategies.\n\n" +
     "STRATEGY SELECTION GUIDE:\n" +
     "- 'readability': Extracts article content as markdown. Best for blogs, news, documentation pages.\n" +
+    "- 'snapshot': ARIA-like semantic tree of page structure. Best for understanding layout, forms, navigation.\n" +
     "- 'grep': Filter lines matching a pattern with optional before/after context (like grep -B/-A).\n" +
     "- 'raw': No processing. Only for small responses (<100KB) when you need exact content.",
   args: {
     url: tool.schema.string().describe("The URL to fetch"),
     strategy: tool.schema
-      .enum(["readability", "grep", "raw"])
+      .enum(["readability", "snapshot", "grep", "raw"])
       .optional()
       .describe("Compaction strategy (default: raw)."),
     pattern: tool.schema.string().optional().describe("Regex pattern for grep strategy"),
@@ -86,7 +89,8 @@ export const webfetch = tool({
           "This will cause token overflow.",
           "",
           "Suggested alternatives:",
-          "- 'readability' for HTML documentation pages",
+          "- 'readability' for article content extraction",
+          "- 'snapshot' for page structure/layout analysis",
           "- 'grep' to filter lines matching a pattern",
         ].join("\n")
       }
