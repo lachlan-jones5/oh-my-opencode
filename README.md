@@ -814,6 +814,31 @@ You can also customize Sisyphus and Planner-Sisyphus like other agents:
 | ---------- | ------- | --------------------------------------------------------------------------------------------------------------------------------------------- |
 | `disabled` | `false` | When `true`, disables Sisyphus agents and restores original build/plan as primary. When `false` (default), Sisyphus and Planner-Sisyphus become primary agents. |
 
+#### GitHub Actions runner selection (sisyphus-dev-ai)
+
+GitHub-hosted **larger runners are a paid feature** (billed per-minute). If you want the agent to run on a “best spec” machine without GitHub billing, the typical approach is a **self-hosted runner** on your own hardware/VM.
+
+This repo’s `@sisyphus-dev-ai` workflow supports configuring `runs-on` via either:
+
+- Workflow dispatch input `runs_on` (JSON)
+- Repository variable `SISYPHUS_RUNS_ON` (JSON)
+
+Examples for `SISYPHUS_RUNS_ON`:
+
+```json
+["ubuntu-latest"]
+```
+
+```json
+["self-hosted", "linux", "x64", "sisyphus-big"]
+```
+
+Runner group example:
+
+```json
+{ "group": "my-runner-group", "labels": ["self-hosted", "linux", "x64"] }
+```
+
 ### Hooks
 
 Disable specific built-in hooks via `disabled_hooks` in `~/.config/opencode/oh-my-opencode.json` or `.opencode/oh-my-opencode.json`:

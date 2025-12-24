@@ -6,6 +6,10 @@ on:
       prompt:
         description: 'Custom prompt'
         required: false
+      runs_on:
+        description: 'JSON for runs-on (array/string/object). Example: ["ubuntu-latest"] or ["self-hosted","linux","x64"]'
+        required: false
+        default: '["ubuntu-latest"]'
   issue_comment:
     types: [created]
   pull_request_review:
@@ -15,7 +19,7 @@ on:
 
 jobs:
   agent:
-    runs-on: ubuntu-latest
+    runs-on: ${{ fromJSON((github.event_name == 'workflow_dispatch' && github.event.inputs.runs_on) || vars.SISYPHUS_RUNS_ON || '["ubuntu-latest"]') }}
     # @sisyphus-dev-ai mention only (maintainers, exclude self)
     if: |
       github.event_name == 'workflow_dispatch' ||
