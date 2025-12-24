@@ -52,37 +52,26 @@ jobs:
         with:
           bun-version: latest
 
-      # Install OpenCode
-      - name: Install OpenCode
+      # Install OpenCode + oh-my-opencode + auth in single step
+      - name: Setup OpenCode with oh-my-opencode
+        env:
+          OPENCODE_AUTH_JSON: ${{ secrets.OPENCODE_AUTH_JSON }}
         run: |
+          # Install OpenCode
           curl -fsSL https://opencode.ai/install.sh | bash
-          echo "$HOME/.local/bin" >> $GITHUB_PATH
-
-      # Verify OpenCode installation
-      - name: Verify OpenCode
-        run: |
+          export PATH="$HOME/.local/bin:$PATH"
           opencode --version
-
-      # Setup oh-my-opencode plugin
-      - name: Setup oh-my-opencode
-        run: |
-          mkdir -p ~/.config/opencode
-          cat > ~/.config/opencode/opencode.json << 'EOF'
-          {
-            "$schema": "https://opencode.ai/config.json",
-            "plugin": ["oh-my-opencode"]
-          }
-          EOF
-          cd ~/.config/opencode
-          bun add oh-my-opencode
-          cat opencode.json
-
-      # Setup OpenCode auth
-      - name: Setup OpenCode Auth
-        run: |
+          
+          # Install oh-my-opencode using the proper installer
+          bunx oh-my-opencode install --no-tui --claude=yes --chatgpt=yes --gemini=no
+          
+          # Setup auth
           mkdir -p ~/.local/share/opencode
-          echo '${{ secrets.OPENCODE_AUTH_JSON }}' > ~/.local/share/opencode/auth.json
+          echo "$OPENCODE_AUTH_JSON" > ~/.local/share/opencode/auth.json
           chmod 600 ~/.local/share/opencode/auth.json
+          
+          # Verify setup
+          cat ~/.config/opencode/opencode.json
 
       # Collect context
       - name: Collect Context
@@ -142,6 +131,8 @@ jobs:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
           GITHUB_TOKEN: ${{ secrets.GH_PAT }}
         run: |
+          export PATH="$HOME/.local/bin:$PATH"
+          
           PROMPT="You are sisyphus-dev-ai, an AI coding agent.
 
           ## Context
