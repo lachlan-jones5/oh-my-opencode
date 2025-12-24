@@ -260,3 +260,43 @@ export function applySnapshot(html: string): string {
 
   return `Page Snapshot (${lines.length} elements)\n---\n${lines.join("\n")}`
 }
+
+export function applySelector(html: string, selector: string): string {
+  const $ = cheerio.load(html)
+
+  const elements = $(selector)
+  if (elements.length === 0) {
+    return `No elements found matching selector: ${selector}`
+  }
+
+  const results: string[] = []
+
+  elements.each((i, el) => {
+    const $el = $(el)
+    const tagName = (el as Element).tagName?.toLowerCase() || "unknown"
+
+    const text = $el.text().trim()
+    const truncatedText = text.length > 200 ? text.slice(0, 200) + "..." : text
+
+    const attrs: string[] = []
+    const href = $el.attr("href")
+    if (href) attrs.push(`href="${href.length > 100 ? href.slice(0, 100) + "..." : href}"`)
+
+    const src = $el.attr("src")
+    if (src) attrs.push(`src="${src.length > 100 ? src.slice(0, 100) + "..." : src}"`)
+
+    const id = $el.attr("id")
+    if (id) attrs.push(`id="${id}"`)
+
+    const className = $el.attr("class")
+    if (className) attrs.push(`class="${className.length > 50 ? className.slice(0, 50) + "..." : className}"`)
+
+    let line = `[${i + 1}] <${tagName}>`
+    if (attrs.length > 0) line += ` (${attrs.join(", ")})`
+    if (truncatedText) line += `\n    ${truncatedText}`
+
+    results.push(line)
+  })
+
+  return `Selector: ${selector}\nMatches: ${elements.length}\n---\n${results.join("\n\n")}`
+}

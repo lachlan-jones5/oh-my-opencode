@@ -1,6 +1,6 @@
 import { tool } from "@opencode-ai/plugin/tool"
 import { DEFAULT_STRATEGY, MAX_OUTPUT_SIZE, MAX_RAW_SIZE, TIMEOUT_MS } from "./constants"
-import { applyReadability, applyRaw, applyGrep, applySnapshot, type GrepOptions } from "./strategies"
+import { applyReadability, applyRaw, applyGrep, applySnapshot, applySelector, type GrepOptions } from "./strategies"
 import type { CompactionStrategy } from "./types"
 
 function formatBytes(bytes: number): string {
@@ -32,11 +32,16 @@ async function fetchWithTimeout(url: string, timeoutMs: number): Promise<string>
   }
 }
 
+interface StrategyOptions extends GrepOptions {
+  pattern?: string
+  selector?: string
+}
+
 function applyStrategy(
   content: string,
   url: string,
   strategy: CompactionStrategy,
-  grepOptions?: { pattern?: string } & GrepOptions
+  options?: StrategyOptions
 ): string {
   switch (strategy) {
     case "readability":
@@ -44,12 +49,17 @@ function applyStrategy(
     case "raw":
       return applyRaw(content)
     case "grep":
-      if (!grepOptions?.pattern) {
+      if (!options?.pattern) {
         return "Error: 'pattern' is required for grep strategy"
       }
-      return applyGrep(content, grepOptions.pattern, grepOptions)
+      return applyGrep(content, options.pattern, options)
     case "snapshot":
       return applySnapshot(content)
+    case "selector":
+      if (!options?.selector) {
+        return "Error: 'selector' is required for selector strategy"
+      }
+      return applySelector(content, options.selector)
     default:
       return applyReadability(content, url)
   }
@@ -61,15 +71,17 @@ export const webfetch = tool({
     "STRATEGY SELECTION GUIDE:\n" +
     "- 'readability': Extracts article content as markdown. Best for blogs, news, documentation pages.\n" +
     "- 'snapshot': ARIA-like semantic tree of page structure. Best for understanding layout, forms, navigation.\n" +
+    "- 'selector': Extract elements matching a CSS selector. Best when you know exact element to target.\n" +
     "- 'grep': Filter lines matching a pattern with optional before/after context (like grep -B/-A).\n" +
     "- 'raw': No processing. Only for small responses (<100KB) when you need exact content.",
   args: {
     url: tool.schema.string().describe("The URL to fetch"),
     strategy: tool.schema
-      .enum(["readability", "snapshot", "grep", "raw"])
+      .enum(["readability", "snapshot", "selector", "grep", "raw"])
       .optional()
       .describe("Compaction strategy (default: raw)."),
     pattern: tool.schema.string().optional().describe("Regex pattern for grep strategy"),
+    selector: tool.schema.string().optional().describe("CSS selector for selector strategy"),
     limit: tool.schema.number().optional().describe("Max lines to return for grep (default: 100)"),
     offset: tool.schema.number().optional().describe("Skip first N result lines for grep pagination"),
     before: tool.schema.number().optional().describe("Lines of context before each match (like grep -B)"),
@@ -91,12 +103,14 @@ export const webfetch = tool({
           "Suggested alternatives:",
           "- 'readability' for article content extraction",
           "- 'snapshot' for page structure/layout analysis",
+          "- 'selector' to extract specific elements by CSS selector",
           "- 'grep' to filter lines matching a pattern",
         ].join("\n")
       }
 
       let result = applyStrategy(rawContent, url, strategy, {
         pattern: args.pattern,
+        selector: args.selector,
         limit: args.limit,
         offset: args.offset,
         before: args.before,
