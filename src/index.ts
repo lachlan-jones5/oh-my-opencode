@@ -23,6 +23,7 @@ import {
   createNonInteractiveEnvHook,
   createInteractiveBashSessionHook,
   createEmptyMessageSanitizerHook,
+  createThinkingBlockValidatorHook,
 } from "./hooks";
 import { createGoogleAntigravityAuthPlugin } from "./auth/antigravity";
 import {
@@ -318,6 +319,9 @@ const OhMyOpenCodePlugin: Plugin = async (ctx) => {
     : null;
   const emptyMessageSanitizer = isHookEnabled("empty-message-sanitizer")
     ? createEmptyMessageSanitizerHook()
+    : null;
+  const thinkingBlockValidator = isHookEnabled("thinking-block-validator")
+    ? createThinkingBlockValidatorHook()
     : null;
 
   const backgroundManager = new BackgroundManager(ctx);
