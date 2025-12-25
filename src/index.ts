@@ -396,7 +396,7 @@ const OhMyOpenCodePlugin: Plugin = async (ctx) => {
 
         if (builderEnabled) {
           const { name: _buildName, ...buildConfigWithoutName } = config.agent?.build ?? {};
-          const builderSisyphusOverride = pluginConfig.agents?.["Builder-Sisyphus"];
+          const builderSisyphusOverride = pluginConfig.agents?.["OpenCode-Builder"];
           const builderSisyphusBase = {
             ...buildConfigWithoutName,
             prompt: BUILD_SYSTEM_PROMPT,
@@ -405,7 +405,7 @@ const OhMyOpenCodePlugin: Plugin = async (ctx) => {
             color: config.agent?.build?.color ?? "#32CD32",
           };
 
-          agentConfig["Builder-Sisyphus"] = builderSisyphusOverride
+          agentConfig["OpenCode-Builder"] = builderSisyphusOverride
             ? { ...builderSisyphusBase, ...builderSisyphusOverride }
             : builderSisyphusBase;
         }

@@ -783,7 +783,7 @@ Available agents: `oracle`, `librarian`, `explore`, `frontend-ui-ux-engineer`, `
 When enabled (default), Sisyphus provides a powerful orchestrator with optional specialized agents:
 
 - **Sisyphus**: Primary orchestrator agent (Claude Opus 4.5)
-- **Builder-Sisyphus**: OpenCode's default build agent, renamed due to SDK limitations (disabled by default)
+- **OpenCode-Builder**: OpenCode's default build agent, renamed due to SDK limitations (disabled by default)
 - **Planner-Sisyphus**: OpenCode's default plan agent, renamed due to SDK limitations (enabled by default)
 
 **Configuration Options:**
@@ -800,7 +800,7 @@ When enabled (default), Sisyphus provides a powerful orchestrator with optional 
 }
 ```
 
-**Example: Enable Builder-Sisyphus and keep default build mode:**
+**Example: Enable OpenCode-Builder and keep default build mode:**
 
 ```json
 {
@@ -811,7 +811,7 @@ When enabled (default), Sisyphus provides a powerful orchestrator with optional 
 }
 ```
 
-This allows you to have both Builder-Sisyphus AND the default build agent available simultaneously.
+This allows you to have both OpenCode-Builder AND the default build agent available simultaneously.
 
 **Example: Disable all Sisyphus orchestration:**
 
@@ -832,7 +832,7 @@ You can also customize Sisyphus agents like other agents:
       "model": "anthropic/claude-sonnet-4",
       "temperature": 0.3
     },
-    "Builder-Sisyphus": {
+    "OpenCode-Builder": {
       "model": "anthropic/claude-opus-4"
     },
     "Planner-Sisyphus": {
@@ -845,9 +845,9 @@ You can also customize Sisyphus agents like other agents:
 | Option              | Default | Description                                                                                                                                         |
 | ------------------- | ------- | --------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `disabled`          | `false` | When `true`, disables all Sisyphus orchestration and restores original build/plan as primary.                                                       |
-| `builder_enabled`   | `false` | When `true`, enables Builder-Sisyphus agent (same as OpenCode build, renamed due to SDK limitations). Disabled by default.                         |
+| `builder_enabled`   | `false` | When `true`, enables OpenCode-Builder agent (same as OpenCode build, renamed due to SDK limitations). Disabled by default.                         |
 | `planner_enabled`   | `true`  | When `true`, enables Planner-Sisyphus agent (same as OpenCode plan, renamed due to SDK limitations). Enabled by default.                           |
-| `replace_build`     | `true`  | When `true`, demotes default build agent to subagent mode. Set to `false` to keep both Builder-Sisyphus and default build available.               |
+| `replace_build`     | `true`  | When `true`, demotes default build agent to subagent mode. Set to `false` to keep both OpenCode-Builder and default build available.               |
 | `replace_plan`      | `true`  | When `true`, demotes default plan agent to subagent mode. Set to `false` to keep both Planner-Sisyphus and default plan available.                 |
 
 ### Hooks
