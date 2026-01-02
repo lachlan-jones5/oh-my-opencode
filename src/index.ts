@@ -25,6 +25,7 @@ import {
   createThinkingBlockValidatorHook,
   createRalphLoopHook,
   createAutoSlashCommandHook,
+  createConfigParseErrorNotifierHook,
 } from "./hooks";
 import { createGoogleAntigravityAuthPlugin } from "./auth/antigravity";
 import {
@@ -152,6 +153,10 @@ const OhMyOpenCodePlugin: Plugin = async (ctx) => {
     ? createAutoSlashCommandHook()
     : null;
 
+  const configParseErrorNotifier = isHookEnabled("config-parse-error-notifier")
+    ? createConfigParseErrorNotifierHook(ctx)
+    : null;
+
   const backgroundManager = new BackgroundManager(ctx);
 
   const todoContinuationEnforcer = isHookEnabled("todo-continuation-enforcer")
@@ -235,6 +240,7 @@ const OhMyOpenCodePlugin: Plugin = async (ctx) => {
       await claudeCodeHooks["chat.message"]?.(input, output);
       await keywordDetector?.["chat.message"]?.(input, output);
       await autoSlashCommand?.["chat.message"]?.(input, output);
+      await configParseErrorNotifier?.["chat.message"]?.(input, output);
 
       if (ralphLoop) {
         const parts = (

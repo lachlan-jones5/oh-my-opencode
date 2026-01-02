@@ -3,7 +3,7 @@ import { getCachedVersion, getLocalDevVersion, findPluginEntry, getLatestVersion
 import { invalidatePackage } from "./cache"
 import { PACKAGE_NAME } from "./constants"
 import { log } from "../../shared/logger"
-import { getConfigLoadErrors, clearConfigLoadErrors } from "../../shared/config-errors"
+import { getConfigLoadErrors } from "../../shared/config-errors"
 import { runBunInstall } from "../../cli/config-manager"
 import type { AutoUpdateCheckerOptions } from "./types"
 
@@ -149,7 +149,6 @@ async function showConfigErrorsIfAny(ctx: PluginInput): Promise<void> {
     .catch(() => {})
 
   log(`[auto-update-checker] Config load errors shown: ${errors.length} error(s)`)
-  clearConfigLoadErrors()
 }
 
 async function showVersionToast(ctx: PluginInput, version: string | null, message: string): Promise<void> {
