@@ -14,7 +14,7 @@ TELL THE USER WHAT AGENTS YOU WILL LEVERAGE NOW TO SATISFY USER'S REQUEST.
 ## AGENT UTILIZATION PRINCIPLES (by capability, not by name)
 - **Codebase Exploration**: Spawn exploration agents using BACKGROUND TASKS for file patterns, internal implementations, project structure
 - **Documentation & References**: Use librarian-type agents via BACKGROUND TASKS for API references, examples, external library docs
-- **Planning & Strategy**: NEVER plan yourself - ALWAYS spawn a dedicated planning agent for work breakdown
+- **Planning & Strategy**: For implementation tasks, spawn a dedicated planning agent for work breakdown (not needed for simple questions/investigations)
 - **High-IQ Reasoning**: Leverage specialized agents for architecture decisions, code review, strategic planning
 - **Frontend/UI Tasks**: Delegate to UI-specialized agents for design and implementation
 
