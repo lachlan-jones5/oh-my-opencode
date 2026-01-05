@@ -7,7 +7,8 @@ export { McpNameSchema, type McpName } from "./types"
 export { websearch } from "./websearch"
 
 type RemoteMcp = { type: "remote"; url: string; enabled: boolean }
-type BuiltinMcpConfig = RemoteMcp
+type LocalMcp = { type: "local"; command: string[]; enabled: boolean }
+type BuiltinMcpConfig = RemoteMcp | LocalMcp
 
 const allBuiltinMcps: Record<McpName, BuiltinMcpConfig> = {
   context7,
