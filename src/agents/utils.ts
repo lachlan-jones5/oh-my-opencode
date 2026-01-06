@@ -7,6 +7,8 @@ import { createExploreAgent, EXPLORE_PROMPT_METADATA } from "./explore"
 import { createFrontendUiUxEngineerAgent, FRONTEND_PROMPT_METADATA } from "./frontend-ui-ux-engineer"
 import { createDocumentWriterAgent, DOCUMENT_WRITER_PROMPT_METADATA } from "./document-writer"
 import { createMultimodalLookerAgent, MULTIMODAL_LOOKER_PROMPT_METADATA } from "./multimodal-looker"
+import { createFrugalSeniorAgent, FRUGAL_SENIOR_PROMPT_METADATA } from "./frugal-senior"
+import { createFrugalJuniorAgent, FRUGAL_JUNIOR_PROMPT_METADATA } from "./frugal-junior"
 import type { AvailableAgent } from "./sisyphus-prompt-builder"
 import { deepMerge } from "../shared"
 
@@ -20,6 +22,8 @@ const agentSources: Record<BuiltinAgentName, AgentSource> = {
   "frontend-ui-ux-engineer": createFrontendUiUxEngineerAgent,
   "document-writer": createDocumentWriterAgent,
   "multimodal-looker": createMultimodalLookerAgent,
+  "frugal-senior": createFrugalSeniorAgent,
+  "frugal-junior": createFrugalJuniorAgent,
 }
 
 /**
@@ -33,6 +37,8 @@ const agentMetadata: Partial<Record<BuiltinAgentName, AgentPromptMetadata>> = {
   "frontend-ui-ux-engineer": FRONTEND_PROMPT_METADATA,
   "document-writer": DOCUMENT_WRITER_PROMPT_METADATA,
   "multimodal-looker": MULTIMODAL_LOOKER_PROMPT_METADATA,
+  "frugal-senior": FRUGAL_SENIOR_PROMPT_METADATA,
+  "frugal-junior": FRUGAL_JUNIOR_PROMPT_METADATA,
 }
 
 function isFactory(source: AgentSource): source is AgentFactory {

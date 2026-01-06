@@ -1,0 +1,8 @@
+# Context Kernel MCP Server Dependencies
+# Install with: pip install -r requirements.txt
+
+# MCP SDK - Model Context Protocol
+mcp>=1.0.0
+
+# Note: No additional dependencies required
+# Server uses only Python standard library beyond MCP SDK

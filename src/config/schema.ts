@@ -24,6 +24,8 @@ export const BuiltinAgentNameSchema = z.enum([
   "frontend-ui-ux-engineer",
   "document-writer",
   "multimodal-looker",
+  "frugal-senior",
+  "frugal-junior",
 ])
 
 export const BuiltinSkillNameSchema = z.enum([
@@ -42,6 +44,8 @@ export const OverridableAgentNameSchema = z.enum([
   "frontend-ui-ux-engineer",
   "document-writer",
   "multimodal-looker",
+  "frugal-senior",
+  "frugal-junior",
 ])
 
 export const AgentNameSchema = BuiltinAgentNameSchema
@@ -75,6 +79,7 @@ export const HookNameSchema = z.enum([
   "claude-code-hooks",
   "auto-slash-command",
   "edit-error-recovery",
+  "frugal-workflow",
 ])
 
 export const BuiltinCommandNameSchema = z.enum([
@@ -110,6 +115,8 @@ export const AgentOverridesSchema = z.object({
   "frontend-ui-ux-engineer": AgentOverrideConfigSchema.optional(),
   "document-writer": AgentOverrideConfigSchema.optional(),
   "multimodal-looker": AgentOverrideConfigSchema.optional(),
+  "frugal-senior": AgentOverrideConfigSchema.optional(),
+  "frugal-junior": AgentOverrideConfigSchema.optional(),
 })
 
 export const ClaudeCodeConfigSchema = z.object({

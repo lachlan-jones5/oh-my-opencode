@@ -1,4 +1,6 @@
 import type { BuiltinSkill } from "./types"
+import { frugalSkill } from "./frugal"
+import { contextKernelSkill } from "./context-kernel"
 
 const playwrightSkill: BuiltinSkill = {
   name: "playwright",
@@ -15,5 +17,5 @@ This skill provides browser automation capabilities via the Playwright MCP serve
 }
 
 export function createBuiltinSkills(): BuiltinSkill[] {
-  return [playwrightSkill]
+  return [playwrightSkill, frugalSkill, contextKernelSkill]
 }

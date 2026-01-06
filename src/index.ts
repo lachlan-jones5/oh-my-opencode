@@ -26,6 +26,7 @@ import {
   createRalphLoopHook,
   createAutoSlashCommandHook,
   createEditErrorRecoveryHook,
+  createFrugalWorkflowHook,
 } from "./hooks";
 import {
   contextCollector,
@@ -174,6 +175,10 @@ const OhMyOpenCodePlugin: Plugin = async (ctx) => {
     ? createEditErrorRecoveryHook(ctx)
     : null;
 
+  const frugalWorkflow = isHookEnabled("frugal-workflow")
+    ? createFrugalWorkflowHook()
+    : null;
+
   const backgroundManager = new BackgroundManager(ctx);
 
   const todoContinuationEnforcer = isHookEnabled("todo-continuation-enforcer")
@@ -268,6 +273,7 @@ const OhMyOpenCodePlugin: Plugin = async (ctx) => {
       await keywordDetector?.["chat.message"]?.(input, output);
       await contextInjector["chat.message"]?.(input, output);
       await autoSlashCommand?.["chat.message"]?.(input, output);
+      await frugalWorkflow?.["chat.message"]?.(input, output);
 
       if (ralphLoop) {
         const parts = (

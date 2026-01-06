@@ -29,3 +29,7 @@ yarn.lock
 test-injection/
 notepad.md
 oauth-success.html
+
+# Python virtual environments
+.venv-context-kernel/
+__pycache__/
