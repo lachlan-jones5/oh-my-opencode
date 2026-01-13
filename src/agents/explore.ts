@@ -1,8 +1,9 @@
 import type { AgentConfig } from "@opencode-ai/sdk"
 import type { AgentPromptMetadata } from "./types"
 import { createAgentToolRestrictions } from "../shared/permission-compat"
+import { getModelForAgent, getDCPPromptForAgent } from "../config"
 
-const DEFAULT_MODEL = "opencode/grok-code"
+const DEFAULT_MODEL = getModelForAgent("explore")
 
 export const EXPLORE_PROMPT_METADATA: AgentPromptMetadata = {
   category: "exploration",

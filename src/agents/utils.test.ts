@@ -1,18 +1,21 @@
-import { describe, test, expect } from "bun:test"
+import { describe, test, expect, beforeEach } from "bun:test"
 import { createBuiltinAgents } from "./utils"
 import type { AgentConfig } from "@opencode-ai/sdk"
+import { clearConfigCache, getModelForAgent } from "../config"
 
 describe("createBuiltinAgents with model overrides", () => {
-  test("Sisyphus with default model has thinking config", () => {
-    // #given - no overrides
+  beforeEach(() => {
+    clearConfigCache()
+  })
+
+  test("Sisyphus uses sovereign-config model by default", () => {
+    // #given - no overrides, using sovereign-config defaults
 
     // #when
     const agents = createBuiltinAgents()
 
-    // #then
-    expect(agents.Sisyphus.model).toBe("anthropic/claude-opus-4-5")
-    expect(agents.Sisyphus.thinking).toEqual({ type: "enabled", budgetTokens: 32000 })
-    expect(agents.Sisyphus.reasoningEffort).toBeUndefined()
+    // #then - should use the sovereign-config default model
+    expect(agents.Sisyphus.model).toBe(getModelForAgent("Sisyphus"))
   })
 
   test("Sisyphus with GPT model override has reasoningEffort, no thinking", () => {
@@ -43,17 +46,14 @@ describe("createBuiltinAgents with model overrides", () => {
     expect(agents.Sisyphus.thinking).toBeUndefined()
   })
 
-  test("Oracle with default model has reasoningEffort", () => {
+  test("Oracle uses sovereign-config model by default", () => {
     // #given - no overrides
 
     // #when
     const agents = createBuiltinAgents()
 
-    // #then
-    expect(agents.oracle.model).toBe("openai/gpt-5.2")
-    expect(agents.oracle.reasoningEffort).toBe("medium")
-    expect(agents.oracle.textVerbosity).toBe("high")
-    expect(agents.oracle.thinking).toBeUndefined()
+    // #then - should use sovereign-config planner model
+    expect(agents.oracle.model).toBe(getModelForAgent("oracle"))
   })
 
   test("Oracle with Claude model override has thinking, no reasoningEffort", () => {

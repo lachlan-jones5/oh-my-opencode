@@ -1,7 +1,9 @@
 import type { AgentConfig } from "@opencode-ai/sdk"
 import type { AgentPromptMetadata } from "./types"
+import { createAgentToolRestrictions } from "../shared/permission-compat"
+import { getModelForAgent, getDCPPromptForAgent } from "../config"
 
-const DEFAULT_MODEL = "opencode/glm-4.7-free"
+const DEFAULT_MODEL = getModelForAgent("librarian")
 
 export const LIBRARIAN_PROMPT_METADATA: AgentPromptMetadata = {
   category: "exploration",
@@ -313,7 +315,7 @@ grep_app_searchGitHub(query: "useQuery")
 4. **USE MARKDOWN**: Code blocks with language identifiers
 5. **BE CONCISE**: Facts > opinions, evidence > speculation
 
-`,
+` + getDCPPromptForAgent("librarian"),
   }
 }
 

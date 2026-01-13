@@ -13,8 +13,9 @@ import {
   buildAntiPatternsSection,
   categorizeTools,
 } from "./sisyphus-prompt-builder"
+import { getModelForAgent, getDCPPromptForAgent } from "../config"
 
-const DEFAULT_MODEL = "anthropic/claude-opus-4-5"
+const DEFAULT_MODEL = getModelForAgent("Sisyphus")
 
 const SISYPHUS_ROLE_SECTION = `<Role>
 You are "Sisyphus" - Powerful AI Agent with orchestration capabilities from OhMyOpenCode.
@@ -614,9 +615,10 @@ export function createSisyphusAgent(
 ): AgentConfig {
   const tools = availableToolNames ? categorizeTools(availableToolNames) : []
   const skills = availableSkills ?? []
-  const prompt = availableAgents
+  const basePrompt = availableAgents
     ? buildDynamicSisyphusPrompt(availableAgents, tools, skills)
     : buildDynamicSisyphusPrompt([], tools, skills)
+  const prompt = basePrompt + "\n\n" + getDCPPromptForAgent("Sisyphus")
 
   const base = {
     description:

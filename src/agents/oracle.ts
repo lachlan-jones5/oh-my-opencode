@@ -2,8 +2,9 @@ import type { AgentConfig } from "@opencode-ai/sdk"
 import type { AgentPromptMetadata } from "./types"
 import { isGptModel } from "./types"
 import { createAgentToolRestrictions } from "../shared/permission-compat"
+import { getModelForAgent, getDCPPromptForAgent } from "../config"
 
-const DEFAULT_MODEL = "openai/gpt-5.2"
+const DEFAULT_MODEL = getModelForAgent("oracle")
 
 export const ORACLE_PROMPT_METADATA: AgentPromptMetadata = {
   category: "advisor",
@@ -111,7 +112,7 @@ export function createOracleAgent(model: string = DEFAULT_MODEL): AgentConfig {
     model,
     temperature: 0.1,
     ...restrictions,
-    prompt: ORACLE_SYSTEM_PROMPT,
+    prompt: ORACLE_SYSTEM_PROMPT + "\n\n" + getDCPPromptForAgent("oracle"),
   } as AgentConfig
 
   if (isGptModel(model)) {
