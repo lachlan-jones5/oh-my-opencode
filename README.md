@@ -999,17 +999,17 @@ You can also customize Sisyphus agents like other agents:
 {
   "agents": {
     "Sisyphus": {
-      "model": "anthropic/claude-sonnet-4",
+      "model": "anthropic/claude-sonnet-4.5",
       "temperature": 0.3
     },
     "OpenCode-Builder": {
-      "model": "anthropic/claude-opus-4"
+      "model": "anthropic/claude-opus-4.5"
     },
     "Prometheus (Planner)": {
       "model": "openai/gpt-5.2"
     },
     "Metis (Plan Consultant)": {
-      "model": "anthropic/claude-sonnet-4-5"
+      "model": "anthropic/claude-sonnet-4.5"
     }
   }
 }

@@ -198,7 +198,7 @@ describe("RED-TEAM: Model-specific behavior", () => {
   test("Claude models get thinking for Momus", () => {
     const agent = createMomusAgent("anthropic/claude-opus-4.5")
     expect(agent.thinking).toBeDefined()
-    expect(agent.thinking?.type).toBe("enabled")
+    expect((agent.thinking as Record<string, unknown>)?.type).toBe("enabled")
   })
 
   test("GPT models get reasoningEffort for Metis", () => {
@@ -221,7 +221,7 @@ describe("RED-TEAM: Tool restrictions enforced", () => {
     if (agent.tools) {
       expect(agent.tools.write).toBe(false)
     } else if (agent.permission) {
-      expect(agent.permission.write).toBe("deny")
+      expect((agent.permission as Record<string, unknown>).write).toBe("deny")
     }
   })
 
@@ -239,7 +239,7 @@ describe("RED-TEAM: Tool restrictions enforced", () => {
     if (agent.tools) {
       expect(agent.tools.task).toBe(false)
     } else if (agent.permission) {
-      expect(agent.permission.task).toBe("deny")
+      expect((agent.permission as Record<string, unknown>).task).toBe("deny")
     }
   })
 
@@ -254,7 +254,7 @@ describe("RED-TEAM: Tool restrictions enforced", () => {
     if (agent.tools) {
       expect(agent.tools.write).toBe(false)
     } else if (agent.permission) {
-      expect(agent.permission.write).toBe("deny")
+      expect((agent.permission as Record<string, unknown>).write).toBe("deny")
     }
   })
 
@@ -272,7 +272,7 @@ describe("RED-TEAM: Tool restrictions enforced", () => {
     if (agent.tools) {
       expect(agent.tools.task).toBe(false)
     } else if (agent.permission) {
-      expect(agent.permission.task).toBe("deny")
+      expect((agent.permission as Record<string, unknown>).task).toBe("deny")
     }
   })
 })

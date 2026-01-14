@@ -71,7 +71,7 @@ describe("Agent Registry - builtinAgents", () => {
     test("all agents have non-empty models", () => {
       for (const [name, agent] of Object.entries(builtinAgents)) {
         expect(agent.model).toBeDefined()
-        expect(agent.model.length).toBeGreaterThan(0)
+        expect(agent.model!.length).toBeGreaterThan(0)
       }
     })
 
@@ -112,14 +112,14 @@ describe("RED-TEAM: All agents have required properties", () => {
   test("every agent has a mode", () => {
     for (const [name, agent] of Object.entries(builtinAgents)) {
       expect(agent.mode, `${name} missing mode`).toBeDefined()
-      expect(["primary", "subagent"], `${name} invalid mode`).toContain(agent.mode)
+      expect(["primary", "subagent"], `${name} invalid mode`).toContain(agent.mode!)
     }
   })
 
   test("every agent has a description", () => {
     for (const [name, agent] of Object.entries(builtinAgents)) {
       expect(agent.description, `${name} missing description`).toBeDefined()
-      expect(agent.description.length, `${name} empty description`).toBeGreaterThan(0)
+      expect(agent.description!.length, `${name} empty description`).toBeGreaterThan(0)
     }
   })
 
@@ -254,8 +254,8 @@ describe("RED-TEAM: Primary vs Subagent capabilities", () => {
     const genius = builtinAgents["Genius"]
     
     // Primary agents should NOT have task tool blocked in either format
-    const sisyphusTaskBlocked = sisyphus.tools?.task === false || sisyphus.permission?.task === "deny"
-    const geniusTaskBlocked = genius.tools?.task === false || genius.permission?.task === "deny"
+    const sisyphusTaskBlocked = sisyphus.tools?.task === false || (sisyphus.permission as Record<string, unknown>)?.task === "deny"
+    const geniusTaskBlocked = genius.tools?.task === false || (genius.permission as Record<string, unknown>)?.task === "deny"
     
     expect(sisyphusTaskBlocked).toBe(false)
     expect(geniusTaskBlocked).toBe(false)
@@ -267,11 +267,11 @@ describe("RED-TEAM: Primary vs Subagent capabilities", () => {
     const oracle = builtinAgents["oracle"]
     
     // Check either legacy tools or new permission format
-    const metisWriteBlocked = metis.tools?.write === false || metis.permission?.write === "deny"
+    const metisWriteBlocked = metis.tools?.write === false || (metis.permission as Record<string, unknown>)?.write === "deny"
     const metisEditBlocked = metis.tools?.edit === false || metis.permission?.edit === "deny"
-    const momusWriteBlocked = momus.tools?.write === false || momus.permission?.write === "deny"
+    const momusWriteBlocked = momus.tools?.write === false || (momus.permission as Record<string, unknown>)?.write === "deny"
     const momusEditBlocked = momus.tools?.edit === false || momus.permission?.edit === "deny"
-    const oracleWriteBlocked = oracle.tools?.write === false || oracle.permission?.write === "deny"
+    const oracleWriteBlocked = oracle.tools?.write === false || (oracle.permission as Record<string, unknown>)?.write === "deny"
     const oracleEditBlocked = oracle.tools?.edit === false || oracle.permission?.edit === "deny"
     
     expect(metisWriteBlocked).toBe(true)
@@ -286,9 +286,9 @@ describe("RED-TEAM: Primary vs Subagent capabilities", () => {
     const explore = builtinAgents["explore"]
     const multimodal = builtinAgents["multimodal-looker"]
     
-    const exploreWriteBlocked = explore.tools?.write === false || explore.permission?.write === "deny"
+    const exploreWriteBlocked = explore.tools?.write === false || (explore.permission as Record<string, unknown>)?.write === "deny"
     const exploreEditBlocked = explore.tools?.edit === false || explore.permission?.edit === "deny"
-    const multimodalWriteBlocked = multimodal.tools?.write === false || multimodal.permission?.write === "deny"
+    const multimodalWriteBlocked = multimodal.tools?.write === false || (multimodal.permission as Record<string, unknown>)?.write === "deny"
     const multimodalEditBlocked = multimodal.tools?.edit === false || multimodal.permission?.edit === "deny"
     
     expect(exploreWriteBlocked).toBe(true)
@@ -325,10 +325,11 @@ describe("RED-TEAM: MaxTokens and thinking budgets", () => {
 
   test("agents with thinking have reasonable budgets", () => {
     for (const [name, agent] of Object.entries(builtinAgents)) {
-      if (agent.thinking?.budgetTokens) {
-        expect(agent.thinking.budgetTokens, `${name} thinking budget too low`)
+      const thinking = agent.thinking as Record<string, unknown> | undefined
+      if (thinking?.budgetTokens) {
+        expect(thinking.budgetTokens, `${name} thinking budget too low`)
           .toBeGreaterThanOrEqual(8000)
-        expect(agent.thinking.budgetTokens, `${name} thinking budget too high`)
+        expect(thinking.budgetTokens, `${name} thinking budget too high`)
           .toBeLessThanOrEqual(100000)
       }
     }

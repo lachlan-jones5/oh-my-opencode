@@ -100,13 +100,15 @@ describe("Genius Agent", () => {
     })
 
     test("has useWhen guidelines", () => {
-      expect(geniusPromptMetadata.useWhen.length).toBeGreaterThan(0)
-      expect(geniusPromptMetadata.useWhen.some(u => u.includes("fail"))).toBe(true)
+      expect(geniusPromptMetadata.useWhen).toBeDefined()
+      expect(geniusPromptMetadata.useWhen!.length).toBeGreaterThan(0)
+      expect(geniusPromptMetadata.useWhen!.some(u => u.includes("fail"))).toBe(true)
     })
 
     test("has avoidWhen guidelines", () => {
-      expect(geniusPromptMetadata.avoidWhen.length).toBeGreaterThan(0)
-      expect(geniusPromptMetadata.avoidWhen.some(a => a.includes("Cost") || a.includes("expensive"))).toBe(true)
+      expect(geniusPromptMetadata.avoidWhen).toBeDefined()
+      expect(geniusPromptMetadata.avoidWhen!.length).toBeGreaterThan(0)
+      expect(geniusPromptMetadata.avoidWhen!.some(a => a.includes("Cost") || a.includes("expensive"))).toBe(true)
     })
   })
 })
@@ -230,7 +232,8 @@ describe("RED-TEAM: Genius Agent Identity", () => {
   })
 
   test("prompt mentions when NOT to use Genius", () => {
-    expect(geniusPromptMetadata.avoidWhen.length).toBeGreaterThan(0)
+    expect(geniusPromptMetadata.avoidWhen).toBeDefined()
+    expect(geniusPromptMetadata.avoidWhen!.length).toBeGreaterThan(0)
   })
 
   test("metadata correctly identifies as advisor category", () => {
