@@ -1,6 +1,7 @@
 import type { AgentConfig } from "@opencode-ai/sdk"
 import type { AgentPromptMetadata } from "./types"
 import { createAgentToolRestrictions } from "../shared/permission-compat"
+import { getModelForAgent } from "../config"
 
 /**
  * Metis - Plan Consultant Agent
@@ -278,7 +279,7 @@ const metisRestrictions = createAgentToolRestrictions([
   "sisyphus_task",
 ])
 
-const DEFAULT_MODEL = "anthropic/claude-opus-4-5"
+const DEFAULT_MODEL = getModelForAgent("metis")
 
 export function createMetisAgent(model: string = DEFAULT_MODEL): AgentConfig {
   return {

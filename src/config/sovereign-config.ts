@@ -13,6 +13,7 @@ export interface SovereignModels {
   orchestrator: string;
   planner: string;
   librarian: string;
+  genius: string;
   fallback: string;
 }
 
@@ -36,10 +37,11 @@ const DEFAULT_CONFIG: SovereignConfig = {
   site_url: 'https://localhost',
   site_name: 'SovereignAgent',
   models: {
-    orchestrator: 'deepseek/deepseek-v3',
-    planner: 'anthropic/claude-opus-4.5',
-    librarian: 'google/gemini-3-flash',
-    fallback: 'meta-llama/llama-3.3-70b-instruct',
+    orchestrator: 'deepseek/deepseek-v3.2',
+    planner: 'deepseek/deepseek-r1-0528',
+    librarian: 'google/gemini-3-flash-preview',
+    genius: 'anthropic/claude-opus-4.5',
+    fallback: 'meta-llama/llama-4-maverick',
   },
   preferences: {
     ultrawork_max_iterations: 50,
@@ -120,13 +122,27 @@ export function getModelForRole(role: keyof SovereignModels): string {
  * Map agent names to sovereign-agent roles
  */
 const AGENT_ROLE_MAP: Record<string, keyof SovereignModels> = {
+  // Orchestrators - primary agents that can delegate
   'Sisyphus': 'orchestrator',
-  'oracle': 'planner',
-  'librarian': 'librarian',
-  'explore': 'librarian',  // Uses same model as librarian
   'frontend-ui-ux-engineer': 'orchestrator',
+  
+  // Planners - reasoning and advisory agents
+  'oracle': 'planner',
+  'metis': 'planner',
+  'Metis (Plan Consultant)': 'planner',
+  'momus': 'planner',
+  'Momus (Plan Reviewer)': 'planner',
+  'prometheus': 'planner',
+  
+  // Librarians - research and exploration agents
+  'librarian': 'librarian',
+  'explore': 'librarian',
   'document-writer': 'librarian',
   'multimodal-looker': 'librarian',
+  
+  // Genius - the escape hatch for hard problems
+  'genius': 'genius',
+  'Genius': 'genius',
 };
 
 /**
